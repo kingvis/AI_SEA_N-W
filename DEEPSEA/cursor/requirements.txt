@@ -1,0 +1,41 @@
+# CableGuard AI - Underwater Cable Monitoring System
+# Dependencies for data analysis, machine learning, and visualization
+
+# Core data analysis libraries
+pandas>=1.5.0
+numpy>=1.21.0
+
+# Machine learning
+scikit-learn>=1.1.0
+joblib>=1.2.0
+
+# Visualization
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# Jupyter notebook support
+jupyter>=1.0.0
+ipykernel>=6.0.0
+ipywidgets>=7.6.0
+
+# Additional data science tools
+scipy>=1.9.0
+statsmodels>=0.13.0
+
+# Optional: Advanced data processing
+# dask>=2022.8.0  # For large datasets
+# plotly>=5.0.0   # Interactive visualizations
+# dash>=2.0.0     # Web-based dashboards
+
+# Development and testing (optional)
+pytest>=7.0.0
+black>=22.0.0
+flake8>=5.0.0
+
+# Data validation
+# cerberus>=1.3.0
+# great-expectations>=0.15.0
+
+# Time series analysis (optional)
+# prophet>=1.1.0
+# pmdarima>=2.0.0 

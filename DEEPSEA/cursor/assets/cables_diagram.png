@@ -1,0 +1,11 @@
+# This is a placeholder for cables_diagram.png
+# In a real implementation, this would be a PNG image file showing:
+# - Underwater cable network topology
+# - Sensor positions along cables
+# - Geographic layout of cable routes
+# - Connection points and amplifiers
+
+# To add an actual image:
+# 1. Create or obtain a cables diagram image
+# 2. Save it as cables_diagram.png in this directory
+# 3. Update dashboard.py to load and display this image 

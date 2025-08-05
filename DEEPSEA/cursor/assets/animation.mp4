@@ -1,0 +1,12 @@
+# This is a placeholder for animation.mp4
+# In a real implementation, this would be an MP4 video file showing:
+# - Animated visualization of data flow through cables
+# - Real-time anomaly detection alerts
+# - Dynamic network health monitoring
+# - Time-series data visualization
+
+# To add an actual animation:
+# 1. Create or obtain an animation video
+# 2. Save it as animation.mp4 in this directory
+# 3. Update dashboard.py to embed and play this video
+# 4. Consider using libraries like moviepy for video generation 
