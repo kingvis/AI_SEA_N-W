@@ -113,11 +113,35 @@ export default function SensorReadingsChart({ data, theme }: SensorReadingsChart
   const chartWidth = width - margin.left - margin.right
   const chartHeight = height - margin.top - margin.bottom
 
-  // Scale functions
+  // Enhanced scale functions with better anomaly visualization
   const timeRange = chartData.timeRange.max.getTime() - chartData.timeRange.min.getTime()
   const values = data.map(d => d.value)
-  const valueMin = Math.min(...values) - 2
-  const valueMax = Math.max(...values) + 2
+  const anomalyValues = data.filter(d => d.is_anomaly_detected).map(d => d.value)
+  const normalValues = data.filter(d => !d.is_anomaly_detected).map(d => d.value)
+  
+  // Dynamic scaling to better show anomalies
+  let valueMin = Math.min(...values)
+  let valueMax = Math.max(...values)
+  
+  // If we have anomalies, ensure they stand out clearly
+  if (anomalyValues.length > 0 && normalValues.length > 0) {
+    const normalMin = Math.min(...normalValues)
+    const normalMax = Math.max(...normalValues)
+    const normalRange = normalMax - normalMin
+    
+    // Add padding based on whether we have anomalies
+    const paddingPercent = anomalyValues.length > 0 ? 0.15 : 0.1 // 15% padding with anomalies, 10% without
+    const padding = Math.max(normalRange * paddingPercent, 2) // Minimum 2 units padding
+    
+    valueMin = Math.min(valueMin - padding, normalMin - padding)
+    valueMax = Math.max(valueMax + padding, normalMax + padding)
+  } else {
+    // Standard padding for normal operation
+    const range = valueMax - valueMin
+    const padding = Math.max(range * 0.1, 2)
+    valueMin -= padding
+    valueMax += padding
+  }
 
   const getX = (timestamp: Date) => 
     ((timestamp.getTime() - chartData.timeRange.min.getTime()) / timeRange) * chartWidth
@@ -356,6 +380,53 @@ export default function SensorReadingsChart({ data, theme }: SensorReadingsChart
                 </text>
               </g>
             ))}
+
+            {/* Baseline Reference Lines for Better Anomaly Visualization */}
+            {normalValues.length > 0 && (
+              <g>
+                {/* Normal Range Band */}
+                {(() => {
+                  const normalMin = Math.min(...normalValues)
+                  const normalMax = Math.max(...normalValues)
+                  const normalAvg = (normalMin + normalMax) / 2
+                  
+                  return (
+                    <>
+                      {/* Normal average line */}
+                      <line
+                        x1={0}
+                        y1={getY(normalAvg)}
+                        x2={chartWidth}
+                        y2={getY(normalAvg)}
+                        stroke="#10B981"
+                        strokeWidth="1"
+                        strokeDasharray="5,5"
+                        opacity="0.4"
+                      />
+                      <text
+                        x={chartWidth - 5}
+                        y={getY(normalAvg) - 5}
+                        fill="#10B981"
+                        fontSize="10"
+                        textAnchor="end"
+                      >
+                        Normal Avg: {normalAvg.toFixed(1)}
+                      </text>
+                      
+                      {/* Normal range band */}
+                      <rect
+                        x={0}
+                        y={getY(normalMax)}
+                        width={chartWidth}
+                        height={getY(normalMin) - getY(normalMax)}
+                        fill="#10B981"
+                        opacity="0.05"
+                      />
+                    </>
+                  )
+                })()}
+              </g>
+            )}
 
             {/* Sensor Lines */}
             {Object.entries(chartData.sensors).map(([sensorId, points]) => {

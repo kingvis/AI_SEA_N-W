@@ -313,48 +313,96 @@ function Dashboard() {
       const baseValues = { temperature: 15, pressure: 75, vibration: 2, current: 12, voltage: 240 }
       const baseValue = baseValues[sensorType as keyof typeof baseValues]
       
-      // Dynamic anomaly detection with different patterns per sensor
+      // Enhanced realistic anomaly detection with operational patterns
       let isAnomaly = false
       let anomalyIntensity = 0
       
-      // Time-based anomaly cycles (some sensors more prone to anomalies at certain times)
-      const timeFactor = Math.sin((currentTime / 60000) + i) // Different phase for each sensor
+      // Current time context for realistic patterns
+      const currentHour = new Date().getHours()
+      const currentMinute = new Date().getMinutes()
+      const timeSinceLastAnomaly = currentTime - lastAnomalyTime
+      
+      // Realistic operational cycles (5-minute monitoring cycles)
+      const operationalCycle = Math.sin((currentTime / 300000) + i) // 5-minute cycles per sensor
+      const dailyPattern = Math.sin(((currentHour - 6) / 12) * Math.PI) // Peak stress 6AM-6PM
       const sensorPattern = anomalyPatterns[sensorId] || Math.random()
       
-      // Multiple anomaly triggers:
-      // 1. Random anomalies (15% base chance - much higher than before)
-      const randomAnomaly = Math.random() < 0.15
+      // Base anomaly probability (realistic for submarine cable monitoring)
+      let anomalyChance = 0.03 // Base 3% chance per check (every 30 seconds)
       
-      // 2. Time-based patterns (sensors have "bad periods")
-      const timeBasedAnomaly = timeFactor > 0.7 && Math.random() < 0.25
-      
-      // 3. Sensor-specific patterns (some sensors are more problematic)
-      const sensorSpecificAnomaly = sensorPattern > 0.7 && Math.random() < 0.3
-      
-      // 4. Cascade anomalies (if one sensor has anomaly, others might follow)
-      const cascadeChance = i > 0 && Math.random() < 0.2
-      
-      if (randomAnomaly || timeBasedAnomaly || sensorSpecificAnomaly || cascadeChance) {
-        isAnomaly = true
-        anomalyIntensity = 0.3 + Math.random() * 0.4 // 30-70% deviation
-        console.log(`🚨 Anomaly detected in ${sensorType} sensor (${sensorId}) at ${new Date().toLocaleTimeString()}`)
+      // 1. Operational stress periods (higher chance during active hours)
+      if (currentHour >= 6 && currentHour <= 22) {
+        anomalyChance += 0.04 // +4% during operational hours
       }
       
-      // Calculate sensor value with appropriate variance
-      const variance = isAnomaly ? anomalyIntensity : (0.05 + Math.random() * 0.05) // Normal: 5-10% variance
-      const deviation = (Math.random() - 0.5) * baseValue * variance
-      const value = baseValue + deviation
-      
-      // Ensure values stay within realistic bounds
-      const minMax = {
-        temperature: [5, 35],
-        pressure: [40, 120],
-        vibration: [0.5, 8],
-        current: [8, 20],
-        voltage: [200, 280]
+      // 2. Time since last anomaly (realistic maintenance patterns)
+      if (timeSinceLastAnomaly > 300000) { // 5+ minutes since last anomaly
+        anomalyChance += 0.05 // +5% if quiet for too long
+      } else if (timeSinceLastAnomaly < 120000) { // Less than 2 minutes
+        anomalyChance += 0.03 // +3% cascade effect
       }
-      const [min, max] = minMax[sensorType as keyof typeof minMax]
-      const clampedValue = Math.max(min, Math.min(max, value))
+      
+      // 3. Sensor aging and environmental patterns
+      if (sensorPattern > 0.75) {
+        anomalyChance += 0.04 // +4% for problematic sensors
+      }
+      
+      // 4. Environmental stress (deep sea conditions)
+      const environmentalStress = Math.abs(operationalCycle) > 0.6 && dailyPattern > 0.2
+      if (environmentalStress) {
+        anomalyChance += 0.06 // +6% during environmental stress
+      }
+      
+      // 5. Critical threshold events (rare but severe)
+      const criticalEvent = Math.random() < 0.005 // 0.5% chance of critical event
+      
+      // Determine if anomaly occurs
+      const standardAnomaly = Math.random() < anomalyChance
+      
+             if (standardAnomaly || criticalEvent) {
+         isAnomaly = true
+         // Realistic anomaly intensity based on severity
+         if (criticalEvent) {
+           anomalyIntensity = 0.8 + Math.random() * 0.15 // 80-95% deviation for critical
+           console.log(`🔥 CRITICAL Anomaly detected in ${sensorType} sensor (${sensorId}) at ${new Date().toLocaleTimeString()}`)
+         } else {
+           anomalyIntensity = 0.25 + Math.random() * 0.45 // 25-70% deviation for standard
+           console.log(`🚨 Standard Anomaly detected in ${sensorType} sensor (${sensorId}) at ${new Date().toLocaleTimeString()}`)
+         }
+       }
+      
+      // Calculate sensor value with realistic variance patterns
+      let value = baseValue
+      
+      if (isAnomaly) {
+        // Clear anomaly peaks for better visualization
+        const anomalyDirection = Math.random() > 0.5 ? 1 : -1 // Spike up or down
+        const anomalyOffset = baseValue * anomalyIntensity * anomalyDirection
+        value = baseValue + anomalyOffset
+      } else {
+        // Normal operational variance (smaller, more realistic)
+        const normalVariance = (Math.random() - 0.5) * baseValue * 0.03 // ±3% normal variance
+        value = baseValue + normalVariance
+      }
+      
+             // Ensure values stay within realistic bounds
+       const minMax = {
+         temperature: [5, 35],
+         pressure: [40, 120],
+         vibration: [0.5, 8],
+         current: [8, 20],
+         voltage: [200, 280]
+       }
+       const [min, max] = minMax[sensorType as keyof typeof minMax]
+       const clampedValue = Math.max(min, Math.min(max, value))
+       
+       // Enhanced logging for anomalies with details
+       if (isAnomaly) {
+         const deviation = Math.abs(clampedValue - baseValue)
+         const deviationPercent = (deviation / baseValue * 100).toFixed(1)
+         console.log(`   📊 Final Value: ${clampedValue.toFixed(2)} (Base: ${baseValue}, Deviation: ±${deviation.toFixed(2)} = ${deviationPercent}%)`)
+         console.log(`   ⏰ Timing: Hour=${currentHour}, Since Last=${Math.round(timeSinceLastAnomaly / 1000)}s, Chance=${(anomalyChance * 100).toFixed(1)}%`)
+       }
       
       return {
         timestamp: new Date(currentTime - (i * 1000) - Math.random() * 30000),
