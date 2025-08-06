@@ -18,7 +18,7 @@ import {
 
 interface BusinessMetricsProps {
   networkStats: {
-    active_sensors?: number
+    activeSensors?: number
     total_readings?: number
     anomalies_detected?: number
     alerts_raised?: number

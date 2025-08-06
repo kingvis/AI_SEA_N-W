@@ -17,7 +17,7 @@ import {
 
 interface ComplianceReportingProps {
   networkStats: {
-    active_sensors?: number
+    activeSensors?: number
     total_readings?: number
     anomalies_detected?: number
     alerts_raised?: number
@@ -283,7 +283,7 @@ export default function ComplianceReporting({ networkStats, className = '' }: Co
             {/* Overview Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { title: 'Active Sensors', value: networkStats.active_sensors || 0, icon: Shield, color: 'green' },
+                { title: 'Active Sensors', value: networkStats.activeSensors || 0, icon: Shield, color: 'green' },
                 { title: 'Total Readings', value: networkStats.total_readings || 0, icon: FileText, color: 'blue' },
                 { title: 'Anomalies Detected', value: networkStats.anomalies_detected || 0, icon: AlertTriangle, color: 'yellow' },
                 { title: 'Alerts Raised', value: networkStats.alerts_raised || 0, icon: Clock, color: 'red' }

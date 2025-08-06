@@ -11,8 +11,8 @@ interface SystemStatisticsProps {
     anomalies_detected?: number
     alerts_raised?: number
     anomaly_rate?: number
-    active_sensors?: number
-    timeout_sensors?: number
+    activeSensors?: number
+    timeoutSensors?: number
   }
   systemHealth: {
     overall: string
@@ -62,8 +62,8 @@ export default function SystemStatistics({ networkStats, systemHealth, theme }: 
   }
 
   const uptime = networkStats.uptime_seconds || 0
-  const totalSensors = (networkStats.active_sensors || 0) + (networkStats.timeout_sensors || 0)
-  const activeRatio = totalSensors > 0 ? (networkStats.active_sensors || 0) / totalSensors : 0
+      const totalSensors = (networkStats.activeSensors || 0) + (networkStats.timeoutSensors || 0)
+    const activeRatio = totalSensors > 0 ? (networkStats.activeSensors || 0) / totalSensors : 0
 
   return (
     <motion.div
@@ -149,7 +149,7 @@ export default function SystemStatistics({ networkStats, systemHealth, theme }: 
               <span className="text-xs text-green-400 font-medium">Active Sensors</span>
             </div>
             <div className="text-lg font-bold text-green-400">
-              {networkStats.active_sensors || 0}/{totalSensors}
+                                      {networkStats.activeSensors || 0}/{totalSensors}
             </div>
           </motion.div>
         </div>

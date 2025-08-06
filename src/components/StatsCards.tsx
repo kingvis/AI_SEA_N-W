@@ -6,7 +6,7 @@ import { Activity, AlertTriangle, Wifi, Clock } from 'lucide-react'
 
 interface StatsCardsProps {
   networkStats: {
-    active_sensors?: number
+    activeSensors?: number
     total_readings?: number
     anomalies_detected?: number
     alerts_raised?: number
@@ -73,7 +73,7 @@ export default function StatsCards({ networkStats, onAnomalyClick }: StatsCardsP
   const stats = [
     {
       title: 'Active Sensors',
-      value: networkStats.active_sensors || 0,
+      value: networkStats.activeSensors || 0,
       icon: Wifi,
       color: 'from-green-500 to-emerald-500',
       bgColor: 'bg-green-500/10',

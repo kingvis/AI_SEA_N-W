@@ -234,11 +234,17 @@ function Dashboard() {
       sensor_id: `sensor_${i}_${i}`,
       value: Math.random() * 20 + 5,
       is_anomaly_detected: Math.random() < 0.1,
-      sensor_type: ['temperature', 'pressure', 'vibration', 'current', 'voltage'][i]
+      sensor_type: ['temperature', 'pressure', 'vibration', 'current', 'voltage'][i],
+      location: `Zone ${i + 1}`,
+      depth: `${(i + 1) * 1000}m`,
+      pressure: Math.random() * 100 + 50,
+      salinity: Math.random() * 5 + 30
     }))
 
     const networkStats = {
-      active_sensors: sensorCount - Math.floor(Math.random() * 2),
+      activeSensors: sensorCount - Math.floor(Math.random() * 2),
+      totalSensors: sensorCount,
+      timeoutSensors: Math.floor(Math.random() * 2),
       total_readings: Math.floor(Math.random() * 10000) + 5000,
       anomalies_detected: Math.floor(Math.random() * 50) + 10,
       alerts_raised: Math.floor(Math.random() * 20) + 5,

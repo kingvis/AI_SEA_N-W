@@ -82,7 +82,7 @@ export default function PredictiveAnalytics({ networkStats, className = '' }: Pr
   useEffect(() => {
     // Simulate AI predictions based on current system state
     const anomalyRate = networkStats.anomaly_rate || 0
-    const availability = networkStats.active_sensors / Math.max(networkStats.totalSensors, 1)
+    const availability = networkStats.activeSensors / Math.max(networkStats.totalSensors, 1)
     
     // Generate maintenance predictions
     const maintenanceSchedule = [
