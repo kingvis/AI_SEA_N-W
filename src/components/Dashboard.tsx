@@ -79,6 +79,9 @@ function Dashboard() {
   const [totalAnomaliesEver, setTotalAnomaliesEver] = useState(0)
   const [lastAnomalyTime, setLastAnomalyTime] = useState(Date.now())
   const [anomalyPatterns, setAnomalyPatterns] = useState<{[key: string]: number}>({})
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const [soundVolume, setSoundVolume] = useState(0.6)
+  const [lastSoundTime, setLastSoundTime] = useState(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // System status for header
@@ -219,17 +222,83 @@ function Dashboard() {
     setShowNotificationsModal(true)
   }, [])
 
-  // Play alarm sound for anomalies
-  const playAlarmSound = useCallback(() => {
+  // Enhanced alert sound system
+  const playAlertSound = useCallback((severity: 'low' | 'medium' | 'high' = 'medium', anomalyCount: number = 1) => {
+    if (!soundEnabled) return
+    
+    // Prevent sound spam - minimum 2 seconds between sounds
+    const now = Date.now()
+    if (now - lastSoundTime < 2000) return
+    setLastSoundTime(now)
+    
     try {
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0
-        audioRef.current.play().catch(console.warn)
+      // Create Web Audio API context for custom sounds
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+      
+      // Different sound patterns for different severities
+      const soundPatterns = {
+        low: {
+          frequency: 800,
+          duration: 0.3,
+          pattern: [1]
+        },
+        medium: {
+          frequency: 1000,
+          duration: 0.4,
+          pattern: [1, 0.3, 1]
+        },
+        high: {
+          frequency: 1200,
+          duration: 0.5,
+          pattern: [1, 0.2, 1, 0.2, 1]
+        }
       }
+      
+      const pattern = soundPatterns[severity]
+      let delay = 0
+      
+      pattern.pattern.forEach((volume, index) => {
+        setTimeout(() => {
+          if (volume > 0) {
+            // Create oscillator for beep sound
+            const oscillator = audioContext.createOscillator()
+            const gainNode = audioContext.createGain()
+            
+            oscillator.connect(gainNode)
+            gainNode.connect(audioContext.destination)
+            
+            // Configure sound
+            oscillator.frequency.setValueAtTime(pattern.frequency, audioContext.currentTime)
+            oscillator.type = severity === 'high' ? 'square' : 'sine'
+            
+            // Volume envelope
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime)
+            gainNode.gain.linearRampToValueAtTime(soundVolume * volume, audioContext.currentTime + 0.01)
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + pattern.duration)
+            
+            // Play sound
+            oscillator.start(audioContext.currentTime)
+            oscillator.stop(audioContext.currentTime + pattern.duration)
+            
+            console.log(`🔊 Playing ${severity} severity alert sound`)
+          }
+        }, delay)
+        delay += pattern.duration * 1000 + 100 // Small gap between beeps
+      })
+      
     } catch (error) {
-      console.warn('Could not play alarm sound:', error)
+      console.warn('Could not play alert sound:', error)
+      // Fallback to simple beep
+      if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 200])
+      }
     }
-  }, [])
+  }, [soundEnabled, soundVolume, lastSoundTime])
+
+  // Legacy support - keep the old function name but use new system
+  const playAlarmSound = useCallback(() => {
+    playAlertSound('medium', 1)
+  }, [playAlertSound])
 
   // Generate synchronized mock data function
   const generateMockData = useCallback((): DashboardData => {
@@ -442,14 +511,32 @@ function Dashboard() {
     return () => clearInterval(uptimeInterval)
   }, [startTime])
 
-  // Handle anomaly detection
+  // Handle anomaly detection with smart alert sounds
   useEffect(() => {
     if (data.anomalies.length > 0) {
       const latestAnomaly = data.anomalies[data.anomalies.length - 1]
       setSelectedAnomaly(latestAnomaly)
-      playAlarmSound()
+      
+      // Determine severity based on anomaly characteristics
+      const baseValues = { temperature: 15, pressure: 75, vibration: 2, current: 12, voltage: 240 }
+      const baseValue = baseValues[latestAnomaly.sensor_type as keyof typeof baseValues] || 1
+      const deviation = Math.abs(latestAnomaly.value - baseValue)
+      const deviationPercent = (deviation / baseValue) * 100
+      
+      // Determine overall severity based on multiple factors
+      let severity: 'low' | 'medium' | 'high' = 'low'
+      if (deviationPercent > 40 || data.anomalies.length >= 3) {
+        severity = 'high'
+      } else if (deviationPercent > 20 || data.anomalies.length >= 2) {
+        severity = 'medium'
+      }
+      
+      // Play appropriate alert sound
+      playAlertSound(severity, data.anomalies.length)
+      
+      console.log(`🔊 Anomaly alert: ${severity} severity (${deviationPercent.toFixed(1)}% deviation, ${data.anomalies.length} total anomalies)`)
     }
-  }, [data.anomalies, playAlarmSound])
+  }, [data.anomalies, playAlertSound])
 
   if (isLoading) {
     return (
@@ -528,6 +615,10 @@ function Dashboard() {
           onRefreshData={handleRefreshData}
           onShowSettings={handleShowSettings}
           onShowNotifications={handleShowNotifications}
+          soundEnabled={soundEnabled}
+          onToggleSound={() => setSoundEnabled(!soundEnabled)}
+          soundVolume={soundVolume}
+          onVolumeChange={setSoundVolume}
           systemStatus={systemStatus}
         />
         

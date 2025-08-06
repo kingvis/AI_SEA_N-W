@@ -2,12 +2,16 @@
 
 import React, { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Cable, Waves, Shield, Activity, ChevronDown, Globe, Server, Settings, Bell, Refresh } from 'lucide-react'
+import { Cable, Waves, Shield, Activity, ChevronDown, Globe, Server, Settings, Bell, RefreshCw, Volume2, VolumeX } from 'lucide-react'
 
 interface HeaderProps {
   onRefreshData?: () => void
   onShowSettings?: () => void
   onShowNotifications?: () => void
+  soundEnabled?: boolean
+  onToggleSound?: () => void
+  soundVolume?: number
+  onVolumeChange?: (volume: number) => void
   systemStatus?: {
     monitoring: boolean
     network: 'online' | 'offline' | 'degraded'
@@ -19,6 +23,10 @@ export default function Header({
   onRefreshData,
   onShowSettings,
   onShowNotifications,
+  soundEnabled = true,
+  onToggleSound,
+  soundVolume = 0.6,
+  onVolumeChange,
   systemStatus = {
     monitoring: true,
     network: 'online',
@@ -320,6 +328,45 @@ export default function Header({
                   />
                 </motion.div>
               </motion.button>
+
+              {/* Sound Controls */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onToggleSound}
+                className={`p-2 transition-all duration-300 rounded-lg border ${
+                  soundEnabled 
+                    ? 'bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border-blue-500/30' 
+                    : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-500 border-slate-600/50'
+                }`}
+                title={soundEnabled ? 'Disable Alert Sounds' : 'Enable Alert Sounds'}
+              >
+                {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              </motion.button>
+
+              {/* Volume Control */}
+              {soundEnabled && (
+                <motion.div
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 'auto' }}
+                  exit={{ opacity: 0, width: 0 }}
+                  className="flex items-center gap-2 px-2 py-1 bg-slate-700/50 rounded-lg border border-slate-600/50"
+                >
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={soundVolume}
+                    onChange={(e) => onVolumeChange?.(parseFloat(e.target.value))}
+                    className="w-16 h-1 bg-slate-600 rounded-lg appearance-none cursor-pointer slider"
+                    title={`Volume: ${Math.round(soundVolume * 100)}%`}
+                  />
+                  <span className="text-xs text-slate-400 min-w-[2rem]">
+                    {Math.round(soundVolume * 100)}%
+                  </span>
+                </motion.div>
+              )}
 
               {/* Settings */}
               <motion.button
