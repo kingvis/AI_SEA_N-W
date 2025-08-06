@@ -75,6 +75,8 @@ function Dashboard() {
   const [lastRefreshTime, setLastRefreshTime] = useState(new Date())
   const [acknowledgedAnomalies, setAcknowledgedAnomalies] = useState<Set<string>>(new Set())
   const [currentUptime, setCurrentUptime] = useState(() => (Date.now() - startTime) / 1000)
+  const [cumulativeReadings, setCumulativeReadings] = useState(0)
+  const [totalAnomaliesEver, setTotalAnomaliesEver] = useState(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // System status for header
@@ -227,55 +229,103 @@ function Dashboard() {
     }
   }, [])
 
-  // Generate mock data function
+  // Generate synchronized mock data function
   const generateMockData = useCallback((): DashboardData => {
-    console.log('📊 Generating new sensor data...')
-    const sensorCount = 5
-    const sensorReadings = Array.from({ length: sensorCount }, (_, i) => ({
-      timestamp: new Date(Date.now() - Math.random() * 3600000),
-      sensor_id: `sensor_${i}_${i}`,
-      value: Math.random() * 20 + 5,
-      is_anomaly_detected: Math.random() < 0.1,
-      sensor_type: ['temperature', 'pressure', 'vibration', 'current', 'voltage'][i],
-      location: `Zone ${i + 1}`,
-      depth: `${(i + 1) * 1000}m`,
-      pressure: Math.random() * 100 + 50,
-      salinity: Math.random() * 5 + 30
+    console.log('📊 Generating synchronized sensor data...')
+    const totalSensorCount = 5
+    const currentTime = Date.now()
+    
+    // Generate realistic sensor readings with coordinated anomaly detection
+    const sensorReadings = Array.from({ length: totalSensorCount }, (_, i) => {
+      const sensorType = ['temperature', 'pressure', 'vibration', 'current', 'voltage'][i]
+      const baseValues = { temperature: 15, pressure: 75, vibration: 2, current: 12, voltage: 240 }
+      const baseValue = baseValues[sensorType as keyof typeof baseValues]
+      
+      // Create more realistic anomaly detection (2-8% chance)
+      const isAnomaly = Math.random() < 0.05
+      const variance = isAnomaly ? 0.4 : 0.1  // Anomalies have higher variance
+      const value = baseValue + (Math.random() - 0.5) * baseValue * variance
+      
+      return {
+        timestamp: new Date(currentTime - (i * 1000) - Math.random() * 30000), // Recent readings
+        sensor_id: `sensor_${i}_${i}`,
+        value: Math.round(value * 100) / 100,
+        is_anomaly_detected: isAnomaly,
+        sensor_type: sensorType,
+        location: `Zone ${i + 1}`,
+        depth: `${(i + 1) * 1000}m`,
+        pressure: Math.round((75 + Math.random() * 25) * 100) / 100,
+        salinity: Math.round((32 + Math.random() * 3) * 100) / 100
+      }
+    })
+
+    // Calculate synchronized metrics based on actual sensor data
+    const activeSensors = totalSensorCount - Math.floor(Math.random() * 1) // Most sensors active
+    const timeoutSensors = totalSensorCount - activeSensors
+    const anomaliesDetected = sensorReadings.filter(r => r.is_anomaly_detected)
+    const totalAnomaliesCount = anomaliesDetected.length
+    
+    // Calculate realistic total readings based on uptime and active sensors
+    const uptimeHours = currentUptime / 3600 // Convert to hours
+    const readingsPerHour = activeSensors * 120 // 120 readings per hour per sensor (every 30 seconds)
+    const newReadings = activeSensors * 1 // New readings since last update (every 30 seconds)
+    const totalReadings = Math.floor(uptimeHours * readingsPerHour) + newReadings
+    
+    // Calculate anomaly rate based on actual anomalies
+    const anomalyRate = sensorReadings.length > 0 ? totalAnomaliesCount / sensorReadings.length : 0
+    
+    // Generate alerts based on actual anomalies
+    const alertsFromAnomalies = anomaliesDetected.map((anomaly, i) => ({
+      id: `alert_${anomaly.sensor_id}_${Date.now() + i}`,
+      timestamp: new Date(anomaly.timestamp.getTime() + Math.random() * 60000),
+      severity: anomaly.value > 20 ? 'high' : anomaly.value > 15 ? 'medium' : 'low',
+      sensor_id: anomaly.sensor_id,
+      description: `${anomaly.sensor_type.charAt(0).toUpperCase() + anomaly.sensor_type.slice(1)} anomaly detected: ${anomaly.value.toFixed(2)} (${anomaly.location})`,
+      resolved: Math.random() < 0.3
     }))
+    
+    // Add some additional system alerts
+    const systemAlerts = Math.random() < 0.3 ? [{
+      id: `alert_system_${Date.now()}`,
+      timestamp: new Date(currentTime - Math.random() * 300000),
+      severity: 'low' as const,
+      sensor_id: 'system',
+      description: 'System maintenance scheduled',
+      resolved: true
+    }] : []
+    
+    const allAlerts = [...alertsFromAnomalies, ...systemAlerts]
 
     const networkStats = {
-      activeSensors: sensorCount - Math.floor(Math.random() * 2),
-      totalSensors: sensorCount,
-      timeoutSensors: Math.floor(Math.random() * 2),
-      total_readings: Math.floor(Math.random() * 10000) + 5000,
-      anomalies_detected: Math.floor(Math.random() * 50) + 10,
-      alerts_raised: Math.floor(Math.random() * 20) + 5,
-      anomaly_rate: Math.random() * 0.1,
+      activeSensors,
+      totalSensors: totalSensorCount,
+      timeoutSensors,
+      total_readings: totalReadings,
+      anomalies_detected: totalAnomaliesCount,
+      alerts_raised: allAlerts.length,
+      anomaly_rate: Math.round(anomalyRate * 10000) / 100, // Percentage with 2 decimal places
       uptime_seconds: 0  // Uptime is handled separately via currentUptime prop
     }
 
-    const alerts = Array.from({ length: Math.floor(Math.random() * 8) + 2 }, (_, i) => ({
-      id: `alert_${i}`,
-      timestamp: new Date(Date.now() - Math.random() * 86400000),
-      severity: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)],
-      sensor_id: `sensor_${Math.floor(Math.random() * sensorCount)}_${Math.floor(Math.random() * sensorCount)}`,
-      description: `Alert ${i + 1}: Sensor anomaly detected`,
-      resolved: Math.random() < 0.3
-    }))
-
-    const anomalies = sensorReadings.filter(reading => reading.is_anomaly_detected)
+    // Calculate system health based on actual metrics
+    const overallHealth = totalAnomaliesCount === 0 ? 'excellent' : 
+                         totalAnomaliesCount <= 1 ? 'good' : 'warning'
+    
+    const availability = activeSensors / totalSensorCount * 100
+    const performance = Math.max(60, 100 - (anomalyRate * 200)) // Performance decreases with anomalies
+    const security = Math.max(85, 100 - (totalAnomaliesCount * 5)) // Security score based on anomalies
 
     return {
       sensorReadings,
       networkStats,
-      alerts,
-      anomalies,
+      alerts: allAlerts,
+      anomalies: anomaliesDetected,
       systemHealth: {
-        overall: ['excellent', 'good', 'warning'][Math.floor(Math.random() * 3)],
+        overall: overallHealth,
         metrics: {
-          availability: 90 + Math.random() * 10,
-          performance: 85 + Math.random() * 15,
-          security: 95 + Math.random() * 5
+          availability: Math.round(availability * 100) / 100,
+          performance: Math.round(performance * 100) / 100,
+          security: Math.round(security * 100) / 100
         }
       }
     }
@@ -295,6 +345,11 @@ function Dashboard() {
         const timestamp = new Date().toLocaleTimeString()
         console.log(`🔄 [${timestamp}] Refreshing sensor readings data every 30 seconds...`)
         const freshData = generateMockData()
+        
+        // Update cumulative tracking
+        setCumulativeReadings(prev => prev + freshData.networkStats.activeSensors)
+        setTotalAnomaliesEver(prev => prev + freshData.anomalies.length)
+        
         setData(freshData)
         setLastRefreshTime(new Date())
       }
