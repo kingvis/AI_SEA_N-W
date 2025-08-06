@@ -1,392 +1,251 @@
-# 🌊 AI Sea Network - CableGuard AI Dashboard
+# 🔌 CableGuard AI - Underwater Cable Monitoring Dashboard
 
-<div align="center">
+A comprehensive AI-powered monitoring system for underwater cable networks, featuring real-time anomaly detection, intelligent alerting, and interactive visualization.
 
-![AI Sea Network](https://img.shields.io/badge/AI%20Sea%20Network-CableGuard%20AI-blue?style=for-the-badge&logo=github)
-![Next.js](https://img.shields.io/badge/Next.js-15.4.4-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)
-
-**An immersive underwater cable monitoring system with AI-powered analytics and real-time visualization**
-
-[🚀 Live Demo](#) • [📖 Documentation](#documentation) • [🐛 Report Bug](https://github.com/kingvis/AI_SEA_N-W/issues) • [💡 Request Feature](https://github.com/kingvis/AI_SEA_N-W/issues)
-
-</div>
-
----
-
-## 🎯 Overview
-
-AI Sea Network is a cutting-edge underwater cable monitoring dashboard that combines advanced AI analytics with immersive visualization. Built for monitoring submarine telecommunication cables, the system provides real-time anomaly detection, predictive analytics, and comprehensive network health monitoring.
-
-### ✨ Key Features
-
-- 🤖 **AI-Powered Anomaly Detection** - Machine learning algorithms for real-time threat detection
-- 📊 **Interactive Dashboard** - Comprehensive monitoring interface with live data visualization
-- 🌊 **Immersive UI/UX** - Underwater-themed interface with subtle bubble animations
-- 📈 **Predictive Analytics** - Future trend analysis and maintenance scheduling
-- 🔔 **Smart Alerting** - Multi-level severity alerts with customizable thresholds
-- 📱 **Responsive Design** - Fully responsive across all device sizes
-- 🎨 **Modern Tech Stack** - Built with Next.js 15, TypeScript, and Tailwind CSS
-
----
-
-## 🏗️ Project Structure
-
-```
-AI_SEA_N-W/
-├── 🔌 CableGuard AI Dashboard/
-│   ├── cableguard-dashboard/           # Main Next.js application
-│   │   ├── src/
-│   │   │   ├── app/                    # Next.js 15 app directory
-│   │   │   ├── components/             # React components
-│   │   │   │   ├── Dashboard.tsx       # Main dashboard component
-│   │   │   │   ├── Header.tsx          # Navigation header
-│   │   │   │   ├── StatsCards.tsx      # KPI statistics cards
-│   │   │   │   ├── SensorReadingsChart.tsx # Real-time sensor data
-│   │   │   │   ├── NetworkStatusChart.tsx  # Network health metrics
-│   │   │   │   ├── AnomalyAnalysis.tsx # AI anomaly detection
-│   │   │   │   ├── AlertsTimeline.tsx  # Alert management
-│   │   │   │   ├── SystemStatistics.tsx # System performance
-│   │   │   │   ├── BusinessMetrics.tsx # Business KPIs
-│   │   │   │   ├── PredictiveAnalytics.tsx # Future predictions
-│   │   │   │   └── ComplianceReporting.tsx # Regulatory compliance
-│   │   │   └── styles/                 # Global styles
-│   │   ├── package.json
-│   │   └── tailwind.config.js
-│   └── DEEPSEA/cursor/                 # Python ML Backend
-│       ├── main.py                     # Main application entry
-│       ├── simulator/
-│       │   └── cable_network.py        # Network simulation
-│       ├── detector/
-│       │   ├── anomaly_model.py        # ML anomaly detection
-│       │   └── monitor.py              # Real-time monitoring
-│       ├── visualizer/
-│       │   └── dashboard.py            # Python dashboard
-│       └── requirements.txt            # Python dependencies
-└── README.md
-```
-
----
+![CableGuard AI Dashboard](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Node.js** 18.0 or later
-- **Python** 3.8 or later
-- **npm** or **yarn**
-- **Git**
+- **Node.js** 18.0.0 or higher
+- **npm** or **yarn** package manager
+- **Git** for version control
 
-### 🔧 Installation
+### Installation & Launch
 
-1. **Clone the repository**
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/kingvis/AI_SEA_N-W.git
-   cd AI_SEA_N-W
+   cd AI_SEA_N-W/cableguard-dashboard
    ```
 
-2. **Setup Frontend Dashboard**
+2. **Install dependencies:**
    ```bash
-   cd cableguard-dashboard
    npm install
+   ```
+
+3. **Launch the development server:**
+   ```bash
    npm run dev
    ```
 
-3. **Setup Python Backend (Optional)**
-   ```bash
-   cd DEEPSEA/cursor
-   pip install -r requirements.txt
-   python main.py
-   ```
+4. **Open your browser:**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-4. **Open in browser**
-   ```
-   http://localhost:3000
-   ```
+## ✨ Features
 
----
+### 🎯 **Interactive Dashboard Components**
+- **📊 Real-time Health Metrics** - Full-width sensor monitoring with color-coded status
+- **🌐 Network Status Charts** - Live visualization of cable network health
+- **⚠️ Anomaly Detection** - AI-powered anomaly identification with acknowledgment system
+- **📋 Compliance Reporting** - Automated report generation and download
+- **💼 Business Metrics** - Revenue impact analysis and cost calculations
+- **🚨 Alert Management** - Multi-level alert system with escalation workflows
 
-## 🎮 Features Showcase
+### 🎮 **Fully Functional Buttons**
+- **🔄 Live Monitoring Toggle** - Real-time system monitoring controls
+- **🌊 Network Status** - Deep sea network information with detailed dropdowns
+- **🛡️ AI Protection** - Neural defense system with scanning capabilities
+- **🔔 Notifications** - System alerts and status updates
+- **⚙️ Settings Panel** - Dashboard configuration and preferences
+- **📤 Data Export** - Download comprehensive reports in JSON format
+- **✅ Anomaly Acknowledgment** - Professional incident management workflow
+- **📈 Business Intelligence** - Period-based metrics and report generation
 
-### 📊 Real-Time Dashboard
-- **Live Sensor Monitoring** - Track temperature, pressure, vibration, and electrical readings
-- **Network Health Matrix** - Visual representation of system status
-- **Interactive Charts** - Dynamic data visualization with smooth animations
+### 🎨 **User Experience**
+- **🌊 Animated Backgrounds** - Interactive bubble animations for underwater theme
+- **📱 Responsive Design** - Works perfectly on desktop, tablet, and mobile
+- **🎭 Smooth Animations** - Framer Motion powered interactions
+- **🎯 Professional UI** - Enterprise-grade interface design
+- **⚡ Real-time Updates** - Live data refresh every 30 seconds
+- **🔍 Detailed Modals** - In-depth views for all system components
 
-### 🤖 AI-Powered Analytics
-- **Anomaly Detection** - Isolation Forest algorithm for unsupervised threat detection
-- **Predictive Maintenance** - ML-based prediction of maintenance needs
-- **Pattern Recognition** - Identify unusual behavior patterns in cable networks
+## 🏗️ Project Structure
 
-### 🌊 Immersive Experience
-- **Underwater Theme** - Deep sea gradient backgrounds
-- **Bubble Animations** - Subtle floating bubbles for ambiance
-- **Smooth Scrolling** - Progressive disclosure with scroll animations
-- **Responsive Design** - Optimized for desktop, tablet, and mobile
-
-### 📈 Business Intelligence
-- **KPI Tracking** - Key performance indicators for network operations
-- **Compliance Reporting** - Regulatory compliance monitoring
-- **Cost Analysis** - Operational cost tracking and optimization
-- **Trend Analysis** - Historical data trends and insights
-
----
-
-## 🛠️ Technology Stack
-
-### Frontend
-- **[Next.js 15.4.4](https://nextjs.org/)** - React framework with app directory
-- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[Framer Motion](https://www.framer.com/motion/)** - Animation library
-- **[Lucide React](https://lucide.dev/)** - Beautiful icon library
-
-### Backend (Python)
-- **[Python 3.8+](https://python.org/)** - Core programming language
-- **[pandas](https://pandas.pydata.org/)** - Data manipulation and analysis
-- **[scikit-learn](https://scikit-learn.org/)** - Machine learning algorithms
-- **[matplotlib](https://matplotlib.org/)** - Data visualization
-- **[numpy](https://numpy.org/)** - Numerical computing
-
-### Development Tools
-- **[ESLint](https://eslint.org/)** - Code linting
-- **[Prettier](https://prettier.io/)** - Code formatting
-- **[Git](https://git-scm.com/)** - Version control
-
----
-
-## 📚 Documentation
-
-### Component Architecture
-
-#### Dashboard Components
-- **`Dashboard.tsx`** - Main container with layout and data management
-- **`Header.tsx`** - Navigation and branding
-- **`StatsCards.tsx`** - Key performance indicators
-- **`SensorReadingsChart.tsx`** - Real-time sensor data visualization
-- **`NetworkStatusChart.tsx`** - Network health and connectivity
-- **`AnomalyAnalysis.tsx`** - AI-powered anomaly detection results
-- **`AlertsTimeline.tsx`** - Alert management and history
-- **`SystemStatistics.tsx`** - System performance metrics
-- **`BusinessMetrics.tsx`** - Business intelligence dashboard
-- **`PredictiveAnalytics.tsx`** - Future trend predictions
-- **`ComplianceReporting.tsx`** - Regulatory compliance status
-
-#### Data Flow
 ```
-Real Sensors → Python Backend → ML Processing → Next.js Frontend → User Interface
-     ↓              ↓              ↓              ↓              ↓
-Cable Network → Data Collection → Anomaly Detection → Visualization → Monitoring
+cableguard-dashboard/
+├── src/
+│   ├── components/
+│   │   ├── Dashboard.tsx          # Main dashboard orchestrator
+│   │   ├── Header.tsx             # Interactive header with status indicators
+│   │   ├── StatsCards.tsx         # Key performance metrics cards
+│   │   ├── SensorHealthMatrix.tsx # Full-width health monitoring table
+│   │   ├── NetworkStatusChart.tsx # Network visualization
+│   │   ├── AlertsTimeline.tsx     # Alert management interface
+│   │   ├── AnomalyAnalysis.tsx    # AI anomaly detection results
+│   │   ├── BusinessMetrics.tsx    # Financial impact analysis
+│   │   ├── ComplianceReporting.tsx# Regulatory compliance tracking
+│   │   ├── PredictiveAnalytics.tsx# Future trend predictions
+│   │   └── SystemStatistics.tsx   # Comprehensive system stats
+│   ├── app/
+│   │   ├── page.tsx              # Main application entry point
+│   │   ├── layout.tsx            # Application layout wrapper
+│   │   └── globals.css           # Global styles and Tailwind
+│   └── types/                    # TypeScript type definitions
+├── public/                       # Static assets
+├── package.json                  # Dependencies and scripts
+├── tailwind.config.ts           # Tailwind CSS configuration
+├── next.config.ts               # Next.js configuration
+└── README.md                    # This file
 ```
 
-### API Integration
-The dashboard supports both real-time data feeds and simulated data for development:
+## 🎯 Key Functionalities
 
-```typescript
-interface SensorReading {
-  timestamp: Date
-  sensor_id: string
-  value: number
-  is_anomaly_detected: boolean
-  sensor_type: string
-  location?: string
-  depth?: string
-}
+### **📊 Real-time Monitoring**
+- Live sensor data visualization
+- Automatic anomaly detection using AI algorithms
+- Color-coded health status indicators
+- Interactive sensor selection and filtering
+
+### **🚨 Alert Management**
+- Multi-severity alert system (Low, Medium, High, Critical)
+- Automatic escalation workflows
+- Acknowledgment tracking
+- Historical alert timeline
+
+### **📈 Business Intelligence**
+- Revenue impact calculations
+- SLA compliance monitoring
+- Cost savings analysis
+- Predictive maintenance scheduling
+
+### **📋 Compliance & Reporting**
+- Automated compliance checking
+- Regulatory report generation
+- Audit trail maintenance
+- Export capabilities for external systems
+
+## 🎮 How to Use
+
+### **🔄 Monitoring Controls**
+1. **Live Monitoring Button** - Toggle real-time data updates
+2. **Refresh Button** - Manually refresh all dashboard data
+3. **Settings** - Configure monitoring intervals and display options
+
+### **📊 Data Interaction**
+1. **Click Anomaly Cards** - View detailed anomaly information
+2. **Select Time Periods** - Change business metrics timeframes
+3. **Export Reports** - Download data in JSON format
+4. **View Details** - Access comprehensive system information
+
+### **🚨 Alert Handling**
+1. **Acknowledge Alerts** - Mark anomalies as reviewed
+2. **Escalate Issues** - Send critical alerts to operations team
+3. **View History** - Review past alerts and responses
+
+## 🛠️ Development
+
+### **Available Scripts**
+
+```bash
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Run linting
+npm run lint
+
+# Type checking
+npm run type-check
 ```
 
----
-
-## 🎨 UI/UX Design
-
-### Design Principles
-- **Immersive Experience** - Underwater theme creates engaging monitoring environment
-- **Data-First** - Information hierarchy prioritizes critical monitoring data
-- **Responsive Layout** - Seamless experience across all device sizes
-- **Accessibility** - WCAG 2.1 compliant design patterns
-
-### Color Palette
-```css
-/* Primary Colors */
---deep-blue: #0F172A     /* Primary background */
---ocean-blue: #1E3A8A    /* Secondary elements */
---cyan-bright: #22D3EE   /* Accent and highlights */
-
-/* Status Colors */
---success: #10B981       /* Normal operations */
---warning: #F59E0B       /* Caution states */
---error: #EF4444         /* Critical alerts */
---info: #3B82F6          /* Information */
-```
-
-### Typography
-- **Headings** - Inter font family for clarity
-- **Body Text** - System fonts for optimal readability
-- **Monospace** - Code and data display
-
----
+### **Tech Stack**
+- **⚛️ Next.js 15** - React framework with App Router
+- **🔷 TypeScript** - Type-safe development
+- **🎨 Tailwind CSS** - Utility-first styling
+- **🎭 Framer Motion** - Smooth animations
+- **⚡ Lucide React** - Beautiful icons
+- **📊 Chart.js** - Data visualization
 
 ## 🔧 Configuration
 
-### Environment Variables
-Create a `.env.local` file in the cableguard-dashboard directory:
+### **Environment Variables**
+Create a `.env.local` file for custom configuration:
 
-```env
-# Application
-NEXT_PUBLIC_APP_NAME=CableGuard AI
-NEXT_PUBLIC_APP_VERSION=1.0.0
-
-# API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:8000
-NEXT_PUBLIC_WS_URL=ws://localhost:8001
-
-# Feature Flags
-NEXT_PUBLIC_ENABLE_ANIMATIONS=true
-NEXT_PUBLIC_ENABLE_SOUND_ALERTS=false
-```
-
-### Customization
-The dashboard supports extensive customization through configuration files:
-
-```typescript
-// tailwind.config.js - Theme customization
-// next.config.js - Next.js configuration
-// tsconfig.json - TypeScript settings
-```
-
----
-
-## 🧪 Testing
-
-### Running Tests
 ```bash
-# Frontend tests
-cd cableguard-dashboard
-npm run test
-npm run test:coverage
+# Optional: Custom port (default: 3000)
+PORT=3000
 
-# Python backend tests
-cd DEEPSEA/cursor
-python test_system.py
+# Optional: API endpoints for real data
+NEXT_PUBLIC_API_URL=https://your-api-endpoint.com
+
+# Optional: Enable debug mode
+NEXT_PUBLIC_DEBUG=false
 ```
 
-### Test Coverage
-- **Component Testing** - React component unit tests
-- **Integration Testing** - API integration tests
-- **E2E Testing** - Full user workflow testing
-- **Performance Testing** - Load and stress testing
-
----
+### **Customization Options**
+- **🎨 Theme Colors** - Modify `THEME_COLORS` in `Dashboard.tsx`
+- **📊 Data Refresh Rate** - Adjust `AUTO_REFRESH_INTERVAL` (default: 30 seconds)
+- **🎭 Animation Settings** - Configure Framer Motion parameters
+- **📱 Responsive Breakpoints** - Customize Tailwind CSS breakpoints
 
 ## 🚀 Deployment
 
-### Production Build
+### **Vercel (Recommended)**
 ```bash
-# Build frontend
-cd cableguard-dashboard
+npm i -g vercel
+vercel
+```
+
+### **Netlify**
+```bash
 npm run build
-npm start
-
-# Production server
-npm run start
+# Upload dist folder to Netlify
 ```
 
-### Docker Deployment
-```dockerfile
-# Coming soon - Docker configuration
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
+### **Docker**
+```bash
+docker build -t cableguard-ai .
+docker run -p 3000:3000 cableguard-ai
 ```
 
----
+## 📈 Performance Features
+
+- **⚡ Optimized Rendering** - React.memo and useMemo for performance
+- **🎯 Lazy Loading** - Components load on demand
+- **📱 Responsive Images** - Automatic image optimization
+- **🔄 Efficient Updates** - Smart re-rendering strategies
+- **💾 State Management** - Optimized state updates and persistence
 
 ## 🤝 Contributing
 
-We welcome contributions to the AI Sea Network project! Please follow these guidelines:
-
-### Development Workflow
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Code Standards
-- **TypeScript** - All new code must be TypeScript
-- **ESLint** - Follow existing linting rules
-- **Testing** - Include tests for new features
-- **Documentation** - Update docs for significant changes
-
-### Commit Convention
-```
-feat: add new sensor monitoring component
-fix: resolve anomaly detection accuracy issue
-docs: update installation instructions
-style: improve dashboard responsive layout
-test: add integration tests for alerts
-```
-
----
-
-## 📝 Changelog
-
-### Version 1.0.0 (Current)
-- ✅ Initial release with full dashboard functionality
-- ✅ AI-powered anomaly detection
-- ✅ Real-time monitoring capabilities
-- ✅ Immersive underwater UI theme
-- ✅ Responsive design implementation
-- ✅ Comprehensive documentation
-
-### Upcoming Features
-- 🔄 Real-time WebSocket integration
-- 🔄 Advanced ML model ensemble
-- 🔄 Mobile app companion
-- 🔄 Multi-language support
-- 🔄 Custom alert configurations
-
----
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Commit your changes** (`git commit -m 'Add amazing feature'`)
+4. **Push to the branch** (`git push origin feature/amazing-feature`)
+5. **Open a Pull Request**
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
+## 🆘 Support
 
-## 🙏 Acknowledgments
+If you encounter any issues:
 
-- **Ocean Networks Canada** - Inspiration for underwater monitoring systems
-- **NOAA** - Real-world oceanographic data insights
-- **Submarine Cable Networks** - Industry best practices
-- **Open Source Community** - Amazing tools and libraries
+1. **Check the console** for error messages
+2. **Verify Node.js version** (18.0.0+)
+3. **Clear npm cache** (`npm cache clean --force`)
+4. **Delete node_modules** and reinstall (`rm -rf node_modules && npm install`)
 
----
+## 🎉 Acknowledgments
 
-## 📞 Support
-
-### Getting Help
-- 📖 **Documentation** - Check this README and inline code comments
-- 🐛 **Bug Reports** - [Create an issue](https://github.com/kingvis/AI_SEA_N-W/issues)
-- 💡 **Feature Requests** - [Submit a proposal](https://github.com/kingvis/AI_SEA_N-W/issues)
-- 💬 **Discussions** - [Join the conversation](https://github.com/kingvis/AI_SEA_N-W/discussions)
-
-### Maintainers
-- **[@kingvis](https://github.com/kingvis)** - Project Lead & Main Developer
+- **🌊 Underwater Cable Industry** - For inspiring this monitoring solution
+- **⚛️ React Team** - For the excellent framework
+- **🎨 Tailwind CSS** - For the utility-first CSS framework
+- **🎭 Framer Motion** - For beautiful animations
 
 ---
 
-<div align="center">
+**🔌 CableGuard AI - Protecting underwater infrastructure with intelligent monitoring**
 
-**🌊 Protecting underwater infrastructure with intelligent monitoring** 
-
-Made with ❤️ for the global telecommunications industry
-
-[⭐ Star this repo](https://github.com/kingvis/AI_SEA_N-W) • [🍴 Fork it](https://github.com/kingvis/AI_SEA_N-W/fork) • [📢 Share it](https://twitter.com/intent/tweet?text=Check%20out%20AI%20Sea%20Network%20-%20CableGuard%20AI%20Dashboard!&url=https://github.com/kingvis/AI_SEA_N-W)
-
-</div> 
+Made with ❤️ for submarine cable operators worldwide 
