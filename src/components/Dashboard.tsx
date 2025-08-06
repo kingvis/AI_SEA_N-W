@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { RefreshCw, Download, Settings, CheckCircle, AlertTriangle, X, MapPin, Clock, Activity, Bell } from 'lucide-react'
+import { RefreshCw, Download, Settings, CheckCircle, AlertTriangle, X, Bell } from 'lucide-react'
 import Header from './Header'
 import StatsCards from './StatsCards'
 import SensorReadingsChart from './SensorReadingsChart'
@@ -34,12 +34,54 @@ export const THEME_COLORS = {
   normal: '#10B981'
 }
 
+interface SensorReading {
+  id?: string
+  timestamp: Date
+  sensor_id: string
+  value: number
+  is_anomaly_detected: boolean
+  sensor_type: string
+  location: string
+  depth: string
+  pressure: number
+  salinity: number
+}
+
+interface NetworkStats {
+  activeSensors: number
+  totalSensors: number
+  timeoutSensors: number
+  total_readings: number
+  anomalies_detected: number
+  alerts_raised: number
+  anomaly_rate: number
+  uptime_seconds: number
+}
+
+interface Alert {
+  id: string
+  timestamp: Date
+  severity: 'low' | 'medium' | 'high'
+  sensor_id: string
+  description: string
+  resolved: boolean
+}
+
+interface SystemHealth {
+  overall: 'excellent' | 'good' | 'warning' | 'critical'
+  metrics: {
+    availability: number
+    performance: number
+    security: number
+  }
+}
+
 interface DashboardData {
-  sensorReadings: any[]
-  networkStats: any
-  alerts: any[]
-  anomalies: any[]
-  systemHealth: any
+  sensorReadings: SensorReading[]
+  networkStats: NetworkStats
+  alerts: Alert[]
+  anomalies: SensorReading[]
+  systemHealth: SystemHealth
 }
 
 function Dashboard() {
@@ -48,7 +90,12 @@ function Dashboard() {
     networkStats: {
       totalSensors: 0,
       activeSensors: 0,
-      timeoutSensors: 0
+      timeoutSensors: 0,
+      total_readings: 0,
+      anomalies_detected: 0,
+      alerts_raised: 0,
+      anomaly_rate: 0,
+      uptime_seconds: 0
     },
     alerts: [],
     anomalies: [],
@@ -440,7 +487,7 @@ function Dashboard() {
       const deviationPercent = Math.round((deviation / baseValue) * 100)
       
       // Determine severity based on deviation percentage
-      const severity = deviationPercent > 40 ? 'high' : deviationPercent > 20 ? 'medium' : 'low'
+                 const severity: 'low' | 'medium' | 'high' = deviationPercent > 40 ? 'high' : deviationPercent > 20 ? 'medium' : 'low'
       
       // Create more descriptive alert messages
       const units = { temperature: '°C', pressure: ' bar', vibration: ' Hz', current: 'A', voltage: 'V' }

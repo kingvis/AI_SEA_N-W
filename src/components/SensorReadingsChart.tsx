@@ -16,7 +16,7 @@ interface SensorReadingsChartProps {
     pressure?: number
     salinity?: number
   }>
-  theme?: any
+  theme?: Record<string, any>
 }
 
 export default function SensorReadingsChart({ data, theme }: SensorReadingsChartProps) {

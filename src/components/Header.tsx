@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Cable, Waves, Shield, Activity, ChevronDown, Globe, Server, Settings, Bell, RefreshCw, Volume2, VolumeX } from 'lucide-react'
+import { Cable, Waves, Shield, Activity, ChevronDown, Globe, Server, Settings, Bell, Volume2, VolumeX } from 'lucide-react'
 
 interface HeaderProps {
   onRefreshData?: () => void
