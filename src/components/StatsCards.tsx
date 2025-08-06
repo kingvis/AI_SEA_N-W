@@ -13,6 +13,7 @@ interface StatsCardsProps {
     anomaly_rate?: number
     uptime_seconds?: number
   }
+  currentUptime?: number
   onAnomalyClick?: () => void
 }
 
@@ -62,7 +63,7 @@ const SmoothCounter = ({ value, isUptime = false }: { value: string | number, is
   )
 }
 
-export default function StatsCards({ networkStats, onAnomalyClick }: StatsCardsProps) {
+export default function StatsCards({ networkStats, currentUptime, onAnomalyClick }: StatsCardsProps) {
   const formatUptime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
@@ -97,7 +98,7 @@ export default function StatsCards({ networkStats, onAnomalyClick }: StatsCardsP
     },
     {
       title: 'System Uptime',
-      value: formatUptime(networkStats.uptime_seconds || 0),
+      value: formatUptime(currentUptime ?? networkStats.uptime_seconds ?? 0),
       icon: Clock,
       color: 'from-purple-500 to-pink-500',
       bgColor: 'bg-purple-500/10',

@@ -301,19 +301,11 @@ function Dashboard() {
     return () => clearInterval(interval)
   }, [generateMockData, systemStatus.monitoring])
 
-  // Update uptime every second for real-time display
+  // Update uptime every second for real-time display (without affecting main data)
   useEffect(() => {
     const uptimeInterval = setInterval(() => {
       const newUptime = (Date.now() - startTime) / 1000
       setCurrentUptime(newUptime)
-      // Also update the data object directly for immediate UI update
-      setData(prevData => ({
-        ...prevData,
-        networkStats: {
-          ...prevData.networkStats,
-          uptime_seconds: newUptime
-        }
-      }))
     }, 1000)
 
     return () => clearInterval(uptimeInterval)
@@ -479,6 +471,7 @@ function Dashboard() {
           >
             <StatsCards 
               networkStats={data.networkStats} 
+              currentUptime={currentUptime}
               onAnomalyClick={handleAnomalyCardClick}
             />
           </motion.div>
@@ -523,6 +516,7 @@ function Dashboard() {
             <SystemStatistics 
               networkStats={data.networkStats} 
               systemHealth={data.systemHealth}
+              currentUptime={currentUptime}
             />
             <BusinessMetrics networkStats={data.networkStats} />
           </motion.div>

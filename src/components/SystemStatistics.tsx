@@ -22,10 +22,11 @@ interface SystemStatisticsProps {
       security: number
     }
   }
+  currentUptime?: number
   theme?: any
 }
 
-export default function SystemStatistics({ networkStats, systemHealth, theme }: SystemStatisticsProps) {
+export default function SystemStatistics({ networkStats, systemHealth, currentUptime, theme }: SystemStatisticsProps) {
   const formatUptime = (seconds: number) => {
     const days = Math.floor(seconds / 86400)
     const hours = Math.floor((seconds % 86400) / 3600)
@@ -61,7 +62,7 @@ export default function SystemStatistics({ networkStats, systemHealth, theme }: 
     }
   }
 
-  const uptime = networkStats.uptime_seconds || 0
+      const uptime = currentUptime ?? networkStats.uptime_seconds ?? 0
       const totalSensors = (networkStats.activeSensors || 0) + (networkStats.timeoutSensors || 0)
     const activeRatio = totalSensors > 0 ? (networkStats.activeSensors || 0) / totalSensors : 0
 
