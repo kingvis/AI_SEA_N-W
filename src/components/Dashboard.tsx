@@ -287,15 +287,16 @@ function Dashboard() {
     setIsLoading(false)
   }, [generateMockData])
 
-  // Auto-refresh data every 5 seconds for real-time uptime updates
+  // Auto-refresh sensor readings every 30 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       if (systemStatus.monitoring) {
+        console.log('🔄 Refreshing sensor readings data...')
         const freshData = generateMockData()
         setData(freshData)
         setLastRefreshTime(new Date())
       }
-    }, 5000)
+    }, 30000)
 
     return () => clearInterval(interval)
   }, [generateMockData, systemStatus.monitoring])
