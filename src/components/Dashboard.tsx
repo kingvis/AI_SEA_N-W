@@ -77,6 +77,8 @@ function Dashboard() {
   const [currentUptime, setCurrentUptime] = useState(() => (Date.now() - startTime) / 1000)
   const [cumulativeReadings, setCumulativeReadings] = useState(0)
   const [totalAnomaliesEver, setTotalAnomaliesEver] = useState(0)
+  const [lastAnomalyTime, setLastAnomalyTime] = useState(Date.now())
+  const [anomalyPatterns, setAnomalyPatterns] = useState<{[key: string]: number}>({})
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // System status for header
@@ -235,27 +237,66 @@ function Dashboard() {
     const totalSensorCount = 5
     const currentTime = Date.now()
     
-    // Generate realistic sensor readings with coordinated anomaly detection
+    // Enhanced anomaly detection with dynamic patterns
     const sensorReadings = Array.from({ length: totalSensorCount }, (_, i) => {
       const sensorType = ['temperature', 'pressure', 'vibration', 'current', 'voltage'][i]
+      const sensorId = `sensor_${i}_${i}`
       const baseValues = { temperature: 15, pressure: 75, vibration: 2, current: 12, voltage: 240 }
       const baseValue = baseValues[sensorType as keyof typeof baseValues]
       
-      // Create more realistic anomaly detection (2-8% chance)
-      const isAnomaly = Math.random() < 0.05
-      const variance = isAnomaly ? 0.4 : 0.1  // Anomalies have higher variance
-      const value = baseValue + (Math.random() - 0.5) * baseValue * variance
+      // Dynamic anomaly detection with different patterns per sensor
+      let isAnomaly = false
+      let anomalyIntensity = 0
+      
+      // Time-based anomaly cycles (some sensors more prone to anomalies at certain times)
+      const timeFactor = Math.sin((currentTime / 60000) + i) // Different phase for each sensor
+      const sensorPattern = anomalyPatterns[sensorId] || Math.random()
+      
+      // Multiple anomaly triggers:
+      // 1. Random anomalies (15% base chance - much higher than before)
+      const randomAnomaly = Math.random() < 0.15
+      
+      // 2. Time-based patterns (sensors have "bad periods")
+      const timeBasedAnomaly = timeFactor > 0.7 && Math.random() < 0.25
+      
+      // 3. Sensor-specific patterns (some sensors are more problematic)
+      const sensorSpecificAnomaly = sensorPattern > 0.7 && Math.random() < 0.3
+      
+      // 4. Cascade anomalies (if one sensor has anomaly, others might follow)
+      const cascadeChance = i > 0 && Math.random() < 0.2
+      
+      if (randomAnomaly || timeBasedAnomaly || sensorSpecificAnomaly || cascadeChance) {
+        isAnomaly = true
+        anomalyIntensity = 0.3 + Math.random() * 0.4 // 30-70% deviation
+        console.log(`🚨 Anomaly detected in ${sensorType} sensor (${sensorId}) at ${new Date().toLocaleTimeString()}`)
+      }
+      
+      // Calculate sensor value with appropriate variance
+      const variance = isAnomaly ? anomalyIntensity : (0.05 + Math.random() * 0.05) // Normal: 5-10% variance
+      const deviation = (Math.random() - 0.5) * baseValue * variance
+      const value = baseValue + deviation
+      
+      // Ensure values stay within realistic bounds
+      const minMax = {
+        temperature: [5, 35],
+        pressure: [40, 120],
+        vibration: [0.5, 8],
+        current: [8, 20],
+        voltage: [200, 280]
+      }
+      const [min, max] = minMax[sensorType as keyof typeof minMax]
+      const clampedValue = Math.max(min, Math.min(max, value))
       
       return {
-        timestamp: new Date(currentTime - (i * 1000) - Math.random() * 30000), // Recent readings
-        sensor_id: `sensor_${i}_${i}`,
-        value: Math.round(value * 100) / 100,
+        timestamp: new Date(currentTime - (i * 1000) - Math.random() * 30000),
+        sensor_id: sensorId,
+        value: Math.round(clampedValue * 100) / 100,
         is_anomaly_detected: isAnomaly,
         sensor_type: sensorType,
         location: `Zone ${i + 1}`,
         depth: `${(i + 1) * 1000}m`,
-        pressure: Math.round((75 + Math.random() * 25) * 100) / 100,
-        salinity: Math.round((32 + Math.random() * 3) * 100) / 100
+        pressure: Math.round((75 + (Math.random() - 0.5) * 30) * 100) / 100,
+        salinity: Math.round((32 + (Math.random() - 0.5) * 4) * 100) / 100
       }
     })
 
@@ -274,15 +315,30 @@ function Dashboard() {
     // Calculate anomaly rate based on actual anomalies
     const anomalyRate = sensorReadings.length > 0 ? totalAnomaliesCount / sensorReadings.length : 0
     
-    // Generate alerts based on actual anomalies
-    const alertsFromAnomalies = anomaliesDetected.map((anomaly, i) => ({
-      id: `alert_${anomaly.sensor_id}_${Date.now() + i}`,
-      timestamp: new Date(anomaly.timestamp.getTime() + Math.random() * 60000),
-      severity: anomaly.value > 20 ? 'high' : anomaly.value > 15 ? 'medium' : 'low',
-      sensor_id: anomaly.sensor_id,
-      description: `${anomaly.sensor_type.charAt(0).toUpperCase() + anomaly.sensor_type.slice(1)} anomaly detected: ${anomaly.value.toFixed(2)} (${anomaly.location})`,
-      resolved: Math.random() < 0.3
-    }))
+    // Generate detailed alerts based on actual anomalies
+    const alertsFromAnomalies = anomaliesDetected.map((anomaly, i) => {
+      const baseValues = { temperature: 15, pressure: 75, vibration: 2, current: 12, voltage: 240 }
+      const baseValue = baseValues[anomaly.sensor_type as keyof typeof baseValues]
+      const deviation = Math.abs(anomaly.value - baseValue)
+      const deviationPercent = Math.round((deviation / baseValue) * 100)
+      
+      // Determine severity based on deviation percentage
+      const severity = deviationPercent > 40 ? 'high' : deviationPercent > 20 ? 'medium' : 'low'
+      
+      // Create more descriptive alert messages
+      const units = { temperature: '°C', pressure: ' bar', vibration: ' Hz', current: 'A', voltage: 'V' }
+      const unit = units[anomaly.sensor_type as keyof typeof units]
+      const statusText = anomaly.value > baseValue ? 'HIGH' : 'LOW'
+      
+      return {
+        id: `alert_${anomaly.sensor_id}_${Date.now() + i}`,
+        timestamp: new Date(anomaly.timestamp.getTime() + Math.random() * 30000),
+        severity,
+        sensor_id: anomaly.sensor_id,
+        description: `🚨 ${anomaly.sensor_type.toUpperCase()} ${statusText}: ${anomaly.value.toFixed(2)}${unit} (${deviationPercent}% deviation, ${anomaly.location})`,
+        resolved: Math.random() < 0.2 // Lower resolution rate for visibility
+      }
+    })
     
     // Add some additional system alerts
     const systemAlerts = Math.random() < 0.3 ? [{
@@ -349,6 +405,22 @@ function Dashboard() {
         // Update cumulative tracking
         setCumulativeReadings(prev => prev + freshData.networkStats.activeSensors)
         setTotalAnomaliesEver(prev => prev + freshData.anomalies.length)
+        
+        // Update anomaly tracking
+        if (freshData.anomalies.length > 0) {
+          setLastAnomalyTime(Date.now())
+          console.log(`📊 Total anomalies this cycle: ${freshData.anomalies.length}`)
+        }
+        
+        // Randomly update sensor patterns (some sensors become more/less problematic over time)
+        if (Math.random() < 0.3) {
+          setAnomalyPatterns(prev => {
+            const newPatterns = { ...prev }
+            const sensorToUpdate = `sensor_${Math.floor(Math.random() * 5)}_${Math.floor(Math.random() * 5)}`
+            newPatterns[sensorToUpdate] = Math.random()
+            return newPatterns
+          })
+        }
         
         setData(freshData)
         setLastRefreshTime(new Date())
