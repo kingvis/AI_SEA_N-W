@@ -229,6 +229,7 @@ function Dashboard() {
 
   // Generate mock data function
   const generateMockData = useCallback((): DashboardData => {
+    console.log('📊 Generating new sensor data...')
     const sensorCount = 5
     const sensorReadings = Array.from({ length: sensorCount }, (_, i) => ({
       timestamp: new Date(Date.now() - Math.random() * 3600000),
@@ -250,7 +251,7 @@ function Dashboard() {
       anomalies_detected: Math.floor(Math.random() * 50) + 10,
       alerts_raised: Math.floor(Math.random() * 20) + 5,
       anomaly_rate: Math.random() * 0.1,
-      uptime_seconds: currentUptime
+      uptime_seconds: 0  // Uptime is handled separately via currentUptime prop
     }
 
     const alerts = Array.from({ length: Math.floor(Math.random() * 8) + 2 }, (_, i) => ({
@@ -278,7 +279,7 @@ function Dashboard() {
         }
       }
     }
-  }, [startTime, currentUptime])
+  }, [startTime])
 
   // Initialize data on mount
   useEffect(() => {
@@ -291,7 +292,8 @@ function Dashboard() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (systemStatus.monitoring) {
-        console.log('🔄 Refreshing sensor readings data...')
+        const timestamp = new Date().toLocaleTimeString()
+        console.log(`🔄 [${timestamp}] Refreshing sensor readings data every 30 seconds...`)
         const freshData = generateMockData()
         setData(freshData)
         setLastRefreshTime(new Date())
@@ -306,6 +308,8 @@ function Dashboard() {
     const uptimeInterval = setInterval(() => {
       const newUptime = (Date.now() - startTime) / 1000
       setCurrentUptime(newUptime)
+      // Uncomment below for debugging uptime updates
+      // console.log('⏱️ Uptime updated:', Math.floor(newUptime), 'seconds')
     }, 1000)
 
     return () => clearInterval(uptimeInterval)
