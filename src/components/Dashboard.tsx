@@ -269,75 +269,58 @@ function Dashboard() {
     setShowNotificationsModal(true)
   }, [])
 
-  // Enhanced alert sound system
+  // Professional single-tone alert system
   const playAlertSound = useCallback((severity: 'low' | 'medium' | 'high' = 'medium', anomalyCount: number = 1) => {
     if (!soundEnabled) return
     
-    // Prevent sound spam - minimum 2 seconds between sounds
+    // Prevent sound spam - minimum 3 seconds between sounds for professional usage
     const now = Date.now()
-    if (now - lastSoundTime < 2000) return
+    if (now - lastSoundTime < 3000) return
     setLastSoundTime(now)
     
     try {
-      // Create Web Audio API context for custom sounds
+      // Create Web Audio API context for professional alert tone
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
       
-      // Different sound patterns for different severities
-      const soundPatterns = {
-        low: {
-          frequency: 800,
-          duration: 0.3,
-          pattern: [1]
-        },
-        medium: {
-          frequency: 1000,
-          duration: 0.4,
-          pattern: [1, 0.3, 1]
-        },
-        high: {
-          frequency: 1200,
-          duration: 0.5,
-          pattern: [1, 0.2, 1, 0.2, 1]
-        }
+      // Professional single-tone frequencies based on industry standards
+      const alertFrequencies = {
+        low: 500,      // Low frequency for minor alerts
+        medium: 800,   // Medium frequency for standard alerts  
+        high: 1000     // Higher frequency for critical alerts
       }
       
-      const pattern = soundPatterns[severity]
-      let delay = 0
+      // Professional tone configuration
+      const frequency = alertFrequencies[severity]
+      const duration = 0.8  // Longer, more authoritative tone
       
-      pattern.pattern.forEach((volume, index) => {
-        setTimeout(() => {
-          if (volume > 0) {
-            // Create oscillator for beep sound
-            const oscillator = audioContext.createOscillator()
-            const gainNode = audioContext.createGain()
-            
-            oscillator.connect(gainNode)
-            gainNode.connect(audioContext.destination)
-            
-            // Configure sound
-            oscillator.frequency.setValueAtTime(pattern.frequency, audioContext.currentTime)
-            oscillator.type = severity === 'high' ? 'square' : 'sine'
-            
-            // Volume envelope
-            gainNode.gain.setValueAtTime(0, audioContext.currentTime)
-            gainNode.gain.linearRampToValueAtTime(soundVolume * volume, audioContext.currentTime + 0.01)
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + pattern.duration)
-            
-            // Play sound
-            oscillator.start(audioContext.currentTime)
-            oscillator.stop(audioContext.currentTime + pattern.duration)
-            
-            console.log(`🔊 Playing ${severity} severity alert sound`)
-          }
-        }, delay)
-        delay += pattern.duration * 1000 + 100 // Small gap between beeps
-      })
+      // Create oscillator for clean professional tone
+      const oscillator = audioContext.createOscillator()
+      const gainNode = audioContext.createGain()
+      
+      oscillator.connect(gainNode)
+      gainNode.connect(audioContext.destination)
+      
+      // Configure professional sine wave tone (clean, not harsh)
+      oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime)
+      oscillator.type = 'sine'  // Professional sine wave for clean sound
+      
+      // Professional volume envelope - smooth fade in/out
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime)
+      gainNode.gain.linearRampToValueAtTime(soundVolume * 0.4, audioContext.currentTime + 0.05) // Gentle fade in
+      gainNode.gain.linearRampToValueAtTime(soundVolume * 0.4, audioContext.currentTime + duration - 0.1) // Sustain
+      gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration) // Gentle fade out
+      
+      // Play single professional tone
+      oscillator.start(audioContext.currentTime)
+      oscillator.stop(audioContext.currentTime + duration)
+      
+      console.log(`🔊 Playing professional ${severity} alert tone (${frequency}Hz)`)
       
     } catch (error) {
       console.warn('Could not play alert sound:', error)
-      // Fallback to simple beep
+      // Fallback to single vibration
       if (navigator.vibrate) {
-        navigator.vibrate([200, 100, 200])
+        navigator.vibrate([400]) // Single professional vibration
       }
     }
   }, [soundEnabled, soundVolume, lastSoundTime])
