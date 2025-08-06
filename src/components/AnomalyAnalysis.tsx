@@ -8,9 +8,13 @@ interface AnomalyAnalysisProps {
   anomalies: Array<{
     timestamp: Date
     sensor_id: string
-    consecutive_count: number
-    severity?: string
-    value?: number
+    value: number
+    is_anomaly_detected: boolean
+    sensor_type?: string
+    location?: string
+    depth?: string
+    pressure?: number
+    salinity?: number
   }>
   theme?: any
 }

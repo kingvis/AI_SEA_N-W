@@ -48,29 +48,47 @@ export default function SensorReadingsChart({ data, theme }: SensorReadingsChart
       
       // Generate realistic time series for each sensor based on their depth zone characteristics
       timePoints.forEach((time, index) => {
-        // Use sensor's base value with realistic variations
+        // Use sensor's current value as the latest point, with historical variation for older points
+        const isCurrentReading = index === 0 // Most recent point
         const baseValue = sensor.value || 0
-        // Safe parsing of sensor ID with proper null checking
-        const sensorIdParts = sensor.sensor_id?.split('_')
-        const sensorIndex = sensorIdParts && sensorIdParts.length > 1 ? sensorIdParts[1] : '0'
-        const timeVariation = Math.sin((index / 10) + parseFloat(sensorIndex)) * 0.3
-        const randomNoise = (Math.random() - 0.5) * 0.05 // ±0.025°C noise (industry standard)
         
-        // Introduce occasional anomalies based on real sensor behavior
-        const isAnomaly = Math.random() < 0.02 // 2% chance per reading
-        const anomalyOffset = isAnomaly ? (Math.random() - 0.5) * 5 : 0
+        // For current reading, use exact sensor data; for historical, create variations
+        let finalValue = baseValue
+        let isAnomaly = false
         
-        const finalValue = Math.max(0, baseValue + timeVariation + randomNoise + anomalyOffset)
+        if (isCurrentReading) {
+          // Use the actual current sensor data including real anomaly status
+          finalValue = sensor.value
+          isAnomaly = sensor.is_anomaly_detected || false
+          
+          // Debug logging for anomaly visualization
+          if (isAnomaly) {
+            console.log(`📊 Chart: Displaying anomaly for ${sensor.sensor_id} (${sensor.sensor_type}) - Value: ${finalValue}`)
+          }
+        } else {
+          // Generate historical data points with variations
+          const sensorIdParts = sensor.sensor_id?.split('_')
+          const sensorIndex = sensorIdParts && sensorIdParts.length > 1 ? sensorIdParts[1] : '0'
+          const timeVariation = Math.sin((index / 10) + parseFloat(sensorIndex)) * 0.3
+          const randomNoise = (Math.random() - 0.5) * 0.05
+          
+          // Occasional historical anomalies (much lower rate than current)
+          isAnomaly = Math.random() < 0.01 // 1% for historical data
+          const anomalyOffset = isAnomaly ? (Math.random() - 0.5) * 3 : 0
+          
+          finalValue = Math.max(0, baseValue + timeVariation + randomNoise + anomalyOffset)
+        }
         
         sensorGroups[sensor.sensor_id].push({
           timestamp: time,
           value: parseFloat(finalValue.toFixed(3)),
-          isAnomaly: isAnomaly || Math.abs(anomalyOffset) > 2,
-          depth: '1000-3000m', // Fallback since not in interface
-          location: sensor.sensor_type || 'Unknown',
-          pressure: 200 + Math.random() * 100,
-          salinity: 34.5,
-          vibration: Math.random() * 0.02
+          isAnomaly: isAnomaly,
+          depth: sensor.depth || '1000-3000m',
+          location: sensor.location || sensor.sensor_type || 'Unknown',
+          pressure: sensor.pressure || (200 + Math.random() * 100),
+          salinity: sensor.salinity || 34.5,
+          vibration: Math.random() * 0.02,
+          sensor_type: sensor.sensor_type
         })
       })
     })
