@@ -74,6 +74,7 @@ function Dashboard() {
   const [isExporting, setIsExporting] = useState(false)
   const [lastRefreshTime, setLastRefreshTime] = useState(new Date())
   const [acknowledgedAnomalies, setAcknowledgedAnomalies] = useState<Set<string>>(new Set())
+  const [currentUptime, setCurrentUptime] = useState(() => (Date.now() - startTime) / 1000)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // System status for header
@@ -249,7 +250,7 @@ function Dashboard() {
       anomalies_detected: Math.floor(Math.random() * 50) + 10,
       alerts_raised: Math.floor(Math.random() * 20) + 5,
       anomaly_rate: Math.random() * 0.1,
-      uptime_seconds: (Date.now() - startTime) / 1000
+      uptime_seconds: currentUptime
     }
 
     const alerts = Array.from({ length: Math.floor(Math.random() * 8) + 2 }, (_, i) => ({
@@ -277,7 +278,7 @@ function Dashboard() {
         }
       }
     }
-  }, [startTime])
+  }, [startTime, currentUptime])
 
   // Initialize data on mount
   useEffect(() => {
@@ -286,7 +287,7 @@ function Dashboard() {
     setIsLoading(false)
   }, [generateMockData])
 
-  // Auto-refresh data every 30 seconds
+  // Auto-refresh data every 5 seconds for real-time uptime updates
   useEffect(() => {
     const interval = setInterval(() => {
       if (systemStatus.monitoring) {
@@ -294,10 +295,28 @@ function Dashboard() {
         setData(freshData)
         setLastRefreshTime(new Date())
       }
-    }, 30000)
+    }, 5000)
 
     return () => clearInterval(interval)
   }, [generateMockData, systemStatus.monitoring])
+
+  // Update uptime every second for real-time display
+  useEffect(() => {
+    const uptimeInterval = setInterval(() => {
+      const newUptime = (Date.now() - startTime) / 1000
+      setCurrentUptime(newUptime)
+      // Also update the data object directly for immediate UI update
+      setData(prevData => ({
+        ...prevData,
+        networkStats: {
+          ...prevData.networkStats,
+          uptime_seconds: newUptime
+        }
+      }))
+    }, 1000)
+
+    return () => clearInterval(uptimeInterval)
+  }, [startTime])
 
   // Handle anomaly detection
   useEffect(() => {
