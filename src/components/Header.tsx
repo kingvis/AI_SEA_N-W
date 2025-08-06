@@ -112,13 +112,13 @@ export default function Header({
           </div>
 
           {/* Professional Status Indicators & Controls */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 h-14">
             {/* Live Monitoring Status */}
             <motion.button 
               whileHover={{ scale: 1.02, y: -1 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleRefresh}
-              className={`flex items-center space-x-2 bg-gradient-to-r ${systemStatus.monitoring ? 'from-green-500/15 to-emerald-500/15 text-green-400 border-green-500/20' : 'from-red-500/15 to-red-500/15 text-red-400 border-red-500/20'} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm hover:shadow-lg min-h-[3.5rem]`}
+              className={`flex items-center space-x-2 bg-gradient-to-r ${systemStatus.monitoring ? 'from-green-500/15 to-emerald-500/15 text-green-400 border-green-500/20' : 'from-red-500/15 to-red-500/15 text-red-400 border-red-500/20'} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm hover:shadow-lg h-12`}
               title={`Last refresh: ${lastRefresh.toLocaleTimeString()}`}
             >
               <motion.div
@@ -160,7 +160,7 @@ export default function Header({
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setShowStatusDropdown(!showStatusDropdown)}
-                className={`hidden md:flex items-center space-x-2 bg-gradient-to-r ${getNetworkStatusColor()} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm hover:shadow-lg min-h-[3.5rem]`}
+                className={`hidden md:flex items-center space-x-2 bg-gradient-to-r ${getNetworkStatusColor()} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm hover:shadow-lg h-12`}
               >
                 <motion.div
                   animate={{ y: [-1, 1, -1] }}
@@ -228,7 +228,7 @@ export default function Header({
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setShowAIDropdown(!showAIDropdown)}
-                className={`hidden lg:flex items-center space-x-2 bg-gradient-to-r ${getAIStatusColor()} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm group hover:shadow-lg min-h-[3.5rem]`}
+                className={`hidden lg:flex items-center space-x-2 bg-gradient-to-r ${getAIStatusColor()} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm group hover:shadow-lg h-12`}
               >
                 <motion.div
                   animate={{ 
@@ -312,13 +312,13 @@ export default function Header({
             </div>
 
             {/* Control Buttons */}
-            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-slate-700/50 min-h-[3.5rem]">
+            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-slate-700/50 h-14">
               {/* Notifications */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onShowNotifications}
-                className="p-2.5 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 rounded-lg border border-slate-600/50 transition-all duration-300 flex items-center justify-center"
+                className="w-10 h-10 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 rounded-lg border border-slate-600/50 transition-all duration-300 flex items-center justify-center"
                 title="Show Notifications"
               >
                 <motion.div className="relative">
@@ -336,7 +336,7 @@ export default function Header({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onToggleSound}
-                className={`p-2.5 transition-all duration-300 rounded-lg border flex items-center justify-center ${
+                className={`w-10 h-10 transition-all duration-300 rounded-lg border flex items-center justify-center ${
                   soundEnabled 
                     ? 'bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border-blue-500/30' 
                     : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-500 border-slate-600/50'
@@ -372,10 +372,10 @@ export default function Header({
 
               {/* Settings */}
               <motion.button
-                whileHover={{ scale: 1.05, rotate: 90 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onShowSettings}
-                className="p-2.5 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 rounded-lg border border-slate-600/50 transition-all duration-300 flex items-center justify-center"
+                className="w-10 h-10 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 rounded-lg border border-slate-600/50 transition-all duration-300 flex items-center justify-center"
                 title="System Settings"
               >
                 <Settings className="w-4 h-4" />
