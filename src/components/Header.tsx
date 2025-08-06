@@ -118,7 +118,7 @@ export default function Header({
               whileHover={{ scale: 1.02, y: -1 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleRefresh}
-              className={`flex items-center space-x-2 bg-gradient-to-r ${systemStatus.monitoring ? 'from-green-500/15 to-emerald-500/15 text-green-400 border-green-500/20' : 'from-red-500/15 to-red-500/15 text-red-400 border-red-500/20'} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm hover:shadow-lg`}
+              className={`flex items-center space-x-2 bg-gradient-to-r ${systemStatus.monitoring ? 'from-green-500/15 to-emerald-500/15 text-green-400 border-green-500/20' : 'from-red-500/15 to-red-500/15 text-red-400 border-red-500/20'} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm hover:shadow-lg min-h-[3.5rem]`}
               title={`Last refresh: ${lastRefresh.toLocaleTimeString()}`}
             >
               <motion.div
@@ -130,9 +130,9 @@ export default function Header({
                   scale: { duration: 2, repeat: Infinity },
                   rotate: { duration: 4, repeat: Infinity, ease: "linear" }
                 }}
-                className="relative"
+                className="relative flex-shrink-0"
               >
-                <Activity className="w-4 h-4 flex-shrink-0" strokeWidth={2} />
+                <Activity className="w-4 h-4" strokeWidth={2} />
                 {systemStatus.monitoring && (
                   <motion.div
                     animate={{ opacity: [0.5, 1, 0.5] }}
@@ -141,11 +141,11 @@ export default function Header({
                   />
                 )}
               </motion.div>
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold hidden sm:inline">
+              <div className="flex flex-col justify-center min-w-0">
+                <span className="text-sm font-semibold leading-tight whitespace-nowrap hidden sm:inline">
                   {systemStatus.monitoring ? 'Live Monitoring' : 'Monitoring Offline'}
                 </span>
-                <span className="text-xs opacity-80 hidden lg:inline">
+                <span className="text-xs opacity-80 leading-tight hidden lg:inline">
                   {systemStatus.monitoring ? 'Active Systems' : 'Check Connection'}
                 </span>
               </div>
@@ -160,22 +160,23 @@ export default function Header({
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setShowStatusDropdown(!showStatusDropdown)}
-                className={`hidden md:flex items-center space-x-2 bg-gradient-to-r ${getNetworkStatusColor()} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm hover:shadow-lg`}
+                className={`hidden md:flex items-center space-x-2 bg-gradient-to-r ${getNetworkStatusColor()} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm hover:shadow-lg min-h-[3.5rem]`}
               >
                 <motion.div
                   animate={{ y: [-1, 1, -1] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="relative"
+                  className="relative flex-shrink-0"
                 >
                   <Waves className="w-4 h-4" strokeWidth={2} />
                 </motion.div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-semibold">Deep Sea Network</span>
-                  <span className="text-xs opacity-80 hidden lg:inline capitalize">{systemStatus.network}</span>
+                <div className="flex flex-col justify-center min-w-0">
+                  <span className="text-sm font-semibold leading-tight whitespace-nowrap">Deep Sea Network</span>
+                  <span className="text-xs opacity-80 leading-tight hidden lg:inline capitalize">{systemStatus.network}</span>
                 </div>
                 <motion.div
                   animate={{ rotate: showStatusDropdown ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
+                  className="flex-shrink-0"
                 >
                   <ChevronDown className="w-3 h-3" />
                 </motion.div>
@@ -227,7 +228,7 @@ export default function Header({
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setShowAIDropdown(!showAIDropdown)}
-                className={`hidden lg:flex items-center space-x-2 bg-gradient-to-r ${getAIStatusColor()} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm group hover:shadow-lg`}
+                className={`hidden lg:flex items-center space-x-2 bg-gradient-to-r ${getAIStatusColor()} px-3 py-2.5 rounded-xl border cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-sm group hover:shadow-lg min-h-[3.5rem]`}
               >
                 <motion.div
                   animate={{ 
@@ -238,7 +239,7 @@ export default function Header({
                     rotate: { duration: 2, repeat: Infinity, ease: "linear" },
                     scale: { duration: 3, repeat: Infinity }
                   }}
-                  className="relative"
+                  className="relative flex-shrink-0"
                 >
                   <Shield className="w-4 h-4" strokeWidth={2} />
                   {systemStatus.aiProtection === 'active' && (
@@ -249,13 +250,14 @@ export default function Header({
                     />
                   )}
                 </motion.div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-semibold">AI Protected</span>
-                  <span className="text-xs opacity-80 capitalize">{systemStatus.aiProtection}</span>
+                <div className="flex flex-col justify-center min-w-0">
+                  <span className="text-sm font-semibold leading-tight whitespace-nowrap">AI Protected</span>
+                  <span className="text-xs opacity-80 leading-tight capitalize">{systemStatus.aiProtection}</span>
                 </div>
                 <motion.div
                   animate={{ rotate: showAIDropdown ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
+                  className="flex-shrink-0"
                 >
                   <ChevronDown className="w-3 h-3" />
                 </motion.div>
@@ -310,13 +312,13 @@ export default function Header({
             </div>
 
             {/* Control Buttons */}
-            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-slate-700/50">
+            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-slate-700/50 min-h-[3.5rem]">
               {/* Notifications */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onShowNotifications}
-                className="p-2 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 rounded-lg border border-slate-600/50 transition-all duration-300"
+                className="p-2.5 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 rounded-lg border border-slate-600/50 transition-all duration-300 flex items-center justify-center"
                 title="Show Notifications"
               >
                 <motion.div className="relative">
@@ -334,7 +336,7 @@ export default function Header({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onToggleSound}
-                className={`p-2 transition-all duration-300 rounded-lg border ${
+                className={`p-2.5 transition-all duration-300 rounded-lg border flex items-center justify-center ${
                   soundEnabled 
                     ? 'bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border-blue-500/30' 
                     : 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-500 border-slate-600/50'
@@ -373,7 +375,7 @@ export default function Header({
                 whileHover={{ scale: 1.05, rotate: 90 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onShowSettings}
-                className="p-2 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 rounded-lg border border-slate-600/50 transition-all duration-300"
+                className="p-2.5 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 rounded-lg border border-slate-600/50 transition-all duration-300 flex items-center justify-center"
                 title="System Settings"
               >
                 <Settings className="w-4 h-4" />
